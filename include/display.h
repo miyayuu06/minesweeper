@@ -2,28 +2,27 @@
 #include <string>
 
 #include "SDL3/SDL.h"
+#include "board.h"
 
-namespace GOL {
+namespace MS {
 	class Display {
 	public:
 		Display();
 		~Display();
 
-		void s();
+		void update(float x, float y);
 
-		void update();
-
-		std::string print();
+		int print();
 
 	private:
-		int size;
-		int desp;
+		int mode;
+
+		int width;
+		int height;
 		SDL_Window* window;
 		SDL_Renderer* renderer;
 		SDL_FRect pixel;
 
-
-		std::pair<int, int> antPos;
-
+		Board board;
 	};
 }

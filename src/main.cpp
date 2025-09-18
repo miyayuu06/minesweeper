@@ -7,6 +7,7 @@ int main()
 {
     Display d;
     SDL_Event event;
+    bool clicked = false;
 
     while (true) {
         float x, y;
@@ -17,10 +18,18 @@ int main()
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+                if (!clicked) {
+                    d.update(clicked, x, y);
+                    clicked = true;
+                }
                 std::cout << d.print() << std::endl;
             }
+
+            if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+                clicked = false;
+            }
         }
-        d.update(x, y);
+        d.update(clicked, x, y);
     }
 
     std::cout << "Hello World!\n";

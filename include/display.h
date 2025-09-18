@@ -10,7 +10,7 @@ namespace MS {
 		Display();
 		~Display();
 
-		void update(float x, float y);
+		void update(bool clicked, float x, float y);
 
 		int print();
 

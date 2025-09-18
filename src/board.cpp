@@ -124,6 +124,7 @@ namespace MS {
 	}
 
 	std::array<int, 2> Board::positionParser(int mode, float x, float y) {
+
 		return { -1, -1 };
 	}
 }

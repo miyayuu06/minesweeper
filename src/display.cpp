@@ -24,13 +24,13 @@ namespace MS {
 		SDL_Quit();
 	}
 
-	void Display::update(float x, float y) {
+	void Display::update(bool clicked, float x, float y) {
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		SDL_RenderClear(renderer);
 
 		SDL_SetRenderDrawColor(renderer, 17, 168, 80, 255);
 		if (x >= 1500 && x <= 1800) {
-			if (y >= 200 && y <= 300) {
+			if (y >= 200 && y <= 300 && !clicked) {
 				mode = 1;
 				board.clearAll();
 				SDL_SetRenderDrawColor(renderer, 7, 158, 70, 255);
@@ -41,7 +41,7 @@ namespace MS {
 
 		SDL_SetRenderDrawColor(renderer, 215, 222, 18, 255);
 		if (x >= 1500 && x <= 1800) {
-			if (y >= 500 && y <= 600) {
+			if (y >= 500 && y <= 600 && !clicked) {
 				mode = 2;
 				board.clearAll();
 				SDL_SetRenderDrawColor(renderer, 205, 212, 8, 255);
@@ -52,7 +52,7 @@ namespace MS {
 
 		SDL_SetRenderDrawColor(renderer, 222, 18, 18, 255);
 		if (x >= 1500 && x <= 1800) {
-			if (y >= 800 && y <= 900) {
+			if (y >= 800 && y <= 900 && !clicked) {
 				mode = 3;
 				board.clearAll();
 				SDL_SetRenderDrawColor(renderer, 202, 8, 8, 255);
@@ -60,16 +60,6 @@ namespace MS {
 		}
 		pixel = { (float) 1500, (float) 800, (float) 300, (float) 100 };
 		SDL_RenderFillRect(renderer, &pixel);
-
-		/*for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (!current.cell[i][j]) {
-					pixel = { (float)desp * j, (float)desp * i, (float)desp, (float)desp };
-					SDL_RenderFillRect(renderer, &pixel);
-				}
-			}
-		}
-		*/
 
 		SDL_RenderPresent(renderer);
 	}

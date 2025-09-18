@@ -1,16 +1,7 @@
 #include "board.h"
+#include <iostream>
 
 namespace MS {
-	/* Board sizes:
-	* - Beginner: 9x9,
-	* - Intermediate: 16x16,
-	* -	Expert: 30x16.
-	*
-	* Mines:
-	* - Beginner: 10,
-	* - Intermediate: 40,
-	* - Expert: 99.
-	*/
 	Board::Board() : easy(9, std::vector<int>(9, 0)),
 		med(16, std::vector<int>(16, 0)),
 		hard(24, std::vector<int>(24, 0)) {
@@ -89,7 +80,7 @@ namespace MS {
 
 	void Board::BFS(int mode, int x, int y) {
 		int size = sizes[mode - 1];
-		std::vector<std::vector<int>> ref = (mode == 1) ? easy : (mode == 2) ? med : hard;
+		auto& ref = (mode == 1) ? easy : (mode == 2) ? med : hard;
 		if (x < size && x >= 0 && y < size && y >= 0) {
 			if (ref[x][y] != -1) {
 				return;
@@ -102,6 +93,11 @@ namespace MS {
 				}
 			}
 			ref[x][y] = c;
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					BFS(mode, x + i, y + j);
+				}
+			}
 		}
 	}
 
@@ -124,7 +120,27 @@ namespace MS {
 	}
 
 	std::array<int, 2> Board::positionParser(int mode, float x, float y) {
+		int size = sizes[mode - 1];
 
-		return { -1, -1 };
+		if (x < 250 || x > 1250 || y < 100 || y > 1100) {
+			return { -1, -1 };
+		}
+
+		float cellW = 1000.0f / size;
+		float cellH = 1000.0f / size;
+
+		int col = (x - 250) / cellW;
+		int row = (y - 100) / cellH;
+
+		return { row, col };
+	}
+
+	void Board::print() {
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 16; j++) {
+				std::cout << med[i][j] << " ";
+			}
+			std::cout << std::endl;
+		}
 	}
 }

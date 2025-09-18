@@ -13,6 +13,7 @@ namespace MS {
 		void update(bool clicked, float x, float y);
 
 		int print();
+		void renderBoard(int mode);
 
 	private:
 		int mode;

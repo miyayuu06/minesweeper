@@ -11,7 +11,7 @@ namespace MS {
 		Board();
 		void clear(int mode);
 		void clearAll();
-		void introduceBombs(int mode, float x, float y);
+		void introduceBombs(int mode, int x, int y);
 		int selectedCell(int mode, int x, int y);
 		void BFS(int mode, int x, int y);
 

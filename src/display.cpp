@@ -75,6 +75,9 @@ namespace MS {
 				board.clearAll();
 			}
 		}
+		else {
+			board.update(mode, x, y);
+		}
 	}
 
 	void Display::renderBoard(int mode) {

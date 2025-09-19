@@ -31,27 +31,31 @@ namespace MS {
 		gameStarted = false;
 	}
 
-	void Board::introduceBombs(int mode, float x, float y) {
-		std::array<int, 2> pos = positionParser(mode, x, y);
-		if (pos[0] != -1) {
+	void Board::introduceBombs(int mode, int x, int y) {
+		if (x != -1) {
+			auto& ref = (mode == 1) ? easy : (mode == 2) ? med : hard;
+			ref[x][y] = -1;
 			int n = mines[mode - 1];
 			int s = sizes[mode - 1];
 			while (n) {
 				int i = rand() % s;
 				int j = rand() % s;
-				if (mode == 1 && easy[i][j] == 0) {
-					easy[i][j] = 9;
-					n--;
-				}
-				else if (mode == 2 && med[i][j] == 0) {
-					med[i][j] = 9;
-					n--;
-				}
-				else if (mode == 3 && hard[i][j] == 0) {
-					hard[i][j] = 9;
+				if (ref[i][j] == 0) {
+					ref[i][j] = 9;
 					n--;
 				}
 			}
+
+			if (mode == 1) {
+				easy = ref;
+			}
+			else if (mode == 2) {
+				med = ref;
+			}
+			else {
+				hard = ref;
+			}
+
 		}
 	}
 
@@ -111,11 +115,11 @@ namespace MS {
 	}
 
 	int Board::update(int mode, float x, float y) {
+		std::array<int, 2> pressedCell = positionParser(mode, x, y);
 		if (!gameStarted) {
-			introduceBombs(mode, x, y);
+			introduceBombs(mode, pressedCell[0], pressedCell[1]);
 			return 1;
 		}
-		std::array<int, 2> pressedCell = positionParser(mode, x, y);
 		return selectedCell(mode, pressedCell[0], pressedCell[1]);
 	}
 
@@ -126,11 +130,10 @@ namespace MS {
 			return { -1, -1 };
 		}
 
-		float cellW = 1000.0f / size;
-		float cellH = 1000.0f / size;
+		float cell = 1000.0f / size;
 
-		int col = (x - 250) / cellW;
-		int row = (y - 100) / cellH;
+		int col = (x - 250) / cell;
+		int row = (y - 100) / cell;
 
 		return { row, col };
 	}
@@ -142,5 +145,6 @@ namespace MS {
 			}
 			std::cout << std::endl;
 		}
+		std::cout << gameStarted;
 	}
 }

@@ -10,7 +10,6 @@ namespace MS {
 
 		Board();
 		void clear(int mode);
-		void clearAll();
 		void introduceBombs(int mode, int x, int y);
 		int selectedCell(int mode, int x, int y);
 		void BFS(int mode, int x, int y);
@@ -20,13 +19,13 @@ namespace MS {
 		int update(int mode, float x, float y);
 
 		void print();
+		int value(int x, int y);
 
 	private:
 		bool gameStarted;
+		int mode;
 		std::array<int, 2> positionParser(int mode, float x, float y);
 
-		std::vector<std::vector<int>> easy;
-		std::vector<std::vector<int>> med;
-		std::vector<std::vector<int>> hard;
+		std::vector<std::vector<int>> cells;
 	};
 }

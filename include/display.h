@@ -17,6 +17,9 @@ namespace MS {
 		void renderBoard(int mode);
 
 	private:
+		const std::vector<int> r = { 220, 170, 148, 75, 0, 0, 255, 255, 255, 255, 200 };
+		const std::vector<int> g = { 220, 170,   0,  0, 0, 255, 255, 127,   0,   0,   0 };
+		const std::vector<int> b = { 220, 170, 211,130,255,   0,   0,   0,   0, 255,   0 };
 		int mode;
 
 		int width;

@@ -5,9 +5,9 @@
 
 namespace MS {
 	Display::Display() {
-		mode = 2;
+		mode = 1;
 
-		board.clearAll();
+		board.clear(mode);
 
 		width = 1920;
 		height = 1200;
@@ -62,17 +62,18 @@ namespace MS {
 
 	void Display::update(float x, float y) {
 		if (x >= 1500 && x <= 1800) {
+			bool changed = false;
 			if (y >= 200 && y <= 300) {
-				mode = 1;
-				board.clearAll();
+				mode = 1; changed = true;
 			}
 			if (y >= 500 && y <= 600) {
-				mode = 2;
-				board.clearAll();
+				mode = 2; changed = true;
 			}
 			if (y >= 800 && y <= 900) {
-				mode = 3;
-				board.clearAll();
+				mode = 3; changed = true;
+			}
+			if (changed) {
+				board.clear(mode);
 			}
 		}
 		else {
@@ -92,12 +93,9 @@ namespace MS {
 
 				pixel = { x, y, cell, cell };
 
-				if ((row + col) % 2 == 0) {
-					SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-				}
-				else {
-					SDL_SetRenderDrawColor(renderer, 170, 170, 170, 255);
-				}
+				int cellContent = board.value(row, col) + 1;
+
+				SDL_SetRenderDrawColor(renderer, r[cellContent], g[cellContent], b[cellContent], 255);
 
 				SDL_RenderFillRect(renderer, &pixel);
 

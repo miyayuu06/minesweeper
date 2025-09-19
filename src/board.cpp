@@ -2,60 +2,39 @@
 #include <iostream>
 
 namespace MS {
-	Board::Board() : easy(9, std::vector<int>(9, 0)),
-		med(16, std::vector<int>(16, 0)),
-		hard(24, std::vector<int>(24, 0)) {
-		srand(NULL);
+	Board::Board() : cells(16, std::vector<int>(16, 0)), mode(2) {
+		srand(time(nullptr));
 	}
 
-	void Board::clear(int mode) {
+	void Board::clear(int m) {
+		mode = m; gameStarted = false;
+		cells.assign(sizes[mode - 1], std::vector<int>(sizes[mode - 1], 0));
 		for (int i = 0; i < sizes[mode - 1]; i++) {
 			for (int j = 0; j < sizes[mode - 1]; j++) {
-				if (mode == 1) {
-					easy[i][j] = 0;
-				}
-				else if (mode == 2) {
-					med[i][j] = 0;
-				}
-				else {
-					hard[i][j] = 0;
-				}
+				cells[i][j] = 0;
 			}
 		}
 	}
 
-	void Board::clearAll() {
-		clear(1);
-		clear(2);
-		clear(3);
-		gameStarted = false;
+	int Board::value(int x, int y) {
+		return cells[x][y];
 	}
 
 	void Board::introduceBombs(int mode, int x, int y) {
 		if (x != -1) {
-			auto& ref = (mode == 1) ? easy : (mode == 2) ? med : hard;
-			ref[x][y] = -1;
+			cells[x][y] = -1;
 			int n = mines[mode - 1];
 			int s = sizes[mode - 1];
 			while (n) {
 				int i = rand() % s;
 				int j = rand() % s;
-				if (ref[i][j] == 0) {
-					ref[i][j] = 9;
+				if (cells[i][j] == 0) {
+					cells[i][j] = 9;
 					n--;
 				}
 			}
-
-			if (mode == 1) {
-				easy = ref;
-			}
-			else if (mode == 2) {
-				med = ref;
-			}
-			else {
-				hard = ref;
-			}
-
+			gameStarted = true;
+			BFS(mode, x, y);
 		}
 	}
 
@@ -64,18 +43,8 @@ namespace MS {
 			return 1;
 		}
 
-		if ((mode == 1 && easy[x][y] == 9) || (mode == 2 && med[x][y] == 9) || (mode == 3 && hard[x][y] == 9)) {
+		if (cells[x][y] == 9) {
 			return 0;
-		}
-
-		if (mode == 1) {
-			easy[x][y] = -1;
-		}
-		else if (mode == 2) {
-			med[x][y] = -1;
-		}
-		else {
-			hard[x][y] = -1;
 		}
 
 		BFS(mode, x, y);
@@ -84,22 +53,30 @@ namespace MS {
 
 	void Board::BFS(int mode, int x, int y) {
 		int size = sizes[mode - 1];
-		auto& ref = (mode == 1) ? easy : (mode == 2) ? med : hard;
 		if (x < size && x >= 0 && y < size && y >= 0) {
-			if (ref[x][y] != -1) {
+
+			if (cells[x][y] != 0) {
 				return;
 			}
 
 			int c = 0;
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
-					c += (i != 0 && j != 0) ? count(mode, x + i, y + j) : 0;
+					if (!(i == 0 && j == 0)) {
+						c += count(mode, x + i, y + j);
+					}
 				}
 			}
-			ref[x][y] = c;
-			for (int i = -1; i <= 1; i++) {
-				for (int j = -1; j <= 1; j++) {
-					BFS(mode, x + i, y + j);
+
+			if (c > 0) {
+				cells[x][y] = c;
+			}
+			else {
+				cells[x][y] = -1;
+				for (int i = -1; i <= 1; i++) {
+					for (int j = -1; j <= 1; j++) {
+						BFS(mode, x + i, y + j);
+					}
 				}
 			}
 		}
@@ -109,9 +86,7 @@ namespace MS {
 		if (x < 0 || y < 0 || x >= sizes[mode - 1] || y >= sizes[mode - 1]) {
 			return 0;
 		}
-		return (mode == 1) ? (easy[x][y] == 9) :
-			(mode == 2) ? (med[x][y] == 9) :
-			(mode == 3) ? (hard[x][y] == 9) : 0;
+		return cells[x][y] == 9;
 	}
 
 	int Board::update(int mode, float x, float y) {
@@ -139,12 +114,11 @@ namespace MS {
 	}
 
 	void Board::print() {
-		for (int i = 0; i < 16; i++) {
-			for (int j = 0; j < 16; j++) {
-				std::cout << med[i][j] << " ";
+		for (int i = 0; i < cells.size(); i++) {
+			for (int j = 0; j < cells.size(); j++) {
+				std::cout << cells[i][j] << " ";
 			}
 			std::cout << std::endl;
 		}
-		std::cout << gameStarted;
 	}
 }

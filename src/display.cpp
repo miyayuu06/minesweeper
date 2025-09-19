@@ -24,7 +24,7 @@ namespace MS {
 		SDL_Quit();
 	}
 
-	void Display::update(bool hasclicked, float x, float y) {
+	void Display::render(float x, float y) {
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		SDL_RenderClear(renderer);
 
@@ -32,9 +32,7 @@ namespace MS {
 
 		SDL_SetRenderDrawColor(renderer, 17, 168, 80, 255);
 		if (x >= 1500 && x <= 1800) {
-			if (y >= 200 && y <= 300 && !hasclicked) {
-				mode = 1;
-				board.clearAll();
+			if (y >= 200 && y <= 300) {
 				SDL_SetRenderDrawColor(renderer, 7, 158, 70, 255);
 			}
 		}
@@ -43,9 +41,7 @@ namespace MS {
 
 		SDL_SetRenderDrawColor(renderer, 215, 222, 18, 255);
 		if (x >= 1500 && x <= 1800) {
-			if (y >= 500 && y <= 600 && !hasclicked) {
-				mode = 2;
-				board.clearAll();
+			if (y >= 500 && y <= 600) {
 				SDL_SetRenderDrawColor(renderer, 205, 212, 8, 255);
 			}
 		}
@@ -54,9 +50,7 @@ namespace MS {
 
 		SDL_SetRenderDrawColor(renderer, 222, 18, 18, 255);
 		if (x >= 1500 && x <= 1800) {
-			if (y >= 800 && y <= 900 && !hasclicked) {
-				mode = 3;
-				board.clearAll();
+			if (y >= 800 && y <= 900) {
 				SDL_SetRenderDrawColor(renderer, 202, 8, 8, 255);
 			}
 		}
@@ -64,6 +58,23 @@ namespace MS {
 		SDL_RenderFillRect(renderer, &pixel);
 
 		SDL_RenderPresent(renderer);
+	}
+
+	void Display::update(float x, float y) {
+		if (x >= 1500 && x <= 1800) {
+			if (y >= 200 && y <= 300) {
+				mode = 1;
+				board.clearAll();
+			}
+			if (y >= 500 && y <= 600) {
+				mode = 2;
+				board.clearAll();
+			}
+			if (y >= 800 && y <= 900) {
+				mode = 3;
+				board.clearAll();
+			}
+		}
 	}
 
 	void Display::renderBoard(int mode) {

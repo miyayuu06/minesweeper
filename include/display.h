@@ -10,7 +10,8 @@ namespace MS {
 		Display();
 		~Display();
 
-		void update(bool clicked, float x, float y);
+		void render(float x, float y);
+		void update(float x, float y);
 
 		int print();
 		void renderBoard(int mode);

@@ -19,7 +19,7 @@ int main()
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
                 if (!clicked) {
-                    d.update(clicked, x, y);
+                    d.update(x, y);
                     clicked = true;
                 }
                 d.print();
@@ -30,7 +30,7 @@ int main()
                 clicked = false;
             }
         }
-        d.update(clicked, x, y);
+        d.render(x, y);
     }
 
     std::cout << "Hello World!\n";

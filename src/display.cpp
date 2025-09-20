@@ -60,7 +60,7 @@ namespace MS {
 		SDL_RenderPresent(renderer);
 	}
 
-	void Display::update(float x, float y) {
+	void Display::update(float x, float y, bool right) {
 		if (x >= 1500 && x <= 1800) {
 			bool changed = false;
 			if (y >= 200 && y <= 300) {
@@ -77,7 +77,7 @@ namespace MS {
 			}
 		}
 		else {
-			board.update(mode, x, y);
+			board.update(mode, x, y, right);
 		}
 	}
 

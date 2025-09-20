@@ -9,11 +9,6 @@ namespace MS {
 	void Board::clear(int m) {
 		mode = m; gameStarted = false;
 		cells.assign(sizes[mode - 1], std::vector<int>(sizes[mode - 1], 0));
-		for (int i = 0; i < sizes[mode - 1]; i++) {
-			for (int j = 0; j < sizes[mode - 1]; j++) {
-				cells[i][j] = 0;
-			}
-		}
 	}
 
 	int Board::value(int x, int y) {
@@ -22,13 +17,12 @@ namespace MS {
 
 	void Board::introduceBombs(int mode, int x, int y) {
 		if (x != -1) {
-			cells[x][y] = -1;
 			int n = mines[mode - 1];
 			int s = sizes[mode - 1];
 			while (n) {
 				int i = rand() % s;
 				int j = rand() % s;
-				if (cells[i][j] == 0) {
+				if (cells[i][j] == 0 && (abs(x - i) >= 2 && abs(y - j) >= 2)) {
 					cells[i][j] = 9;
 					n--;
 				}
@@ -38,8 +32,24 @@ namespace MS {
 		}
 	}
 
-	int Board::selectedCell(int mode, int x, int y) {
+	int Board::selectedCell(int mode, int x, int y, bool right) {
 		if (x < -1) {
+			return 1;
+		}
+
+		if (right) {
+			if (cells[x][y] == 9) {
+				cells[x][y] = 10;
+			}
+			else if (cells[x][y] == 0) {
+				cells[x][y] = 11;
+			}
+			else if (cells[x][y] == 10) {
+				cells[x][y] = 9;
+			}
+			else if (cells[x][y] == 11) {
+				cells[x][y] = 0;
+			}
 			return 1;
 		}
 
@@ -58,6 +68,8 @@ namespace MS {
 			if (cells[x][y] != 0) {
 				return;
 			}
+
+			cells[x][y] = -1;
 
 			int c = 0;
 			for (int i = -1; i <= 1; i++) {
@@ -89,13 +101,15 @@ namespace MS {
 		return cells[x][y] == 9;
 	}
 
-	int Board::update(int mode, float x, float y) {
+	int Board::update(int mode, float x, float y, bool right) {
 		std::array<int, 2> pressedCell = positionParser(mode, x, y);
 		if (!gameStarted) {
-			introduceBombs(mode, pressedCell[0], pressedCell[1]);
+			if (!right) {
+				introduceBombs(mode, pressedCell[0], pressedCell[1]);
+			}
 			return 1;
 		}
-		return selectedCell(mode, pressedCell[0], pressedCell[1]);
+		return selectedCell(mode, pressedCell[0], pressedCell[1], right);
 	}
 
 	std::array<int, 2> Board::positionParser(int mode, float x, float y) {

@@ -22,6 +22,7 @@ namespace MS {
 		int value(int x, int y);
 
 	private:
+		int filled;
 		bool gameStarted;
 		int mode;
 		std::array<int, 2> positionParser(int mode, float x, float y);

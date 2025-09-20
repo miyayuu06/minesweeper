@@ -2,12 +2,13 @@
 #include <iostream>
 
 namespace MS {
-	Board::Board() : cells(16, std::vector<int>(16, 0)), mode(2) {
+	Board::Board() : cells(16, std::vector<int>(16, 0)), mode(2), filled(40) {
 		srand(time(nullptr));
 	}
 
 	void Board::clear(int m) {
 		mode = m; gameStarted = false;
+		filled = mines[m - 1];
 		cells.assign(sizes[mode - 1], std::vector<int>(sizes[mode - 1], 0));
 	}
 
@@ -40,12 +41,17 @@ namespace MS {
 		if (right) {
 			if (cells[x][y] == 9) {
 				cells[x][y] = 10;
+				filled--;
+				if (!filled) {
+					return 2; 
+				}
 			}
 			else if (cells[x][y] == 0) {
 				cells[x][y] = 11;
 			}
 			else if (cells[x][y] == 10) {
 				cells[x][y] = 9;
+				filled++;
 			}
 			else if (cells[x][y] == 11) {
 				cells[x][y] = 0;

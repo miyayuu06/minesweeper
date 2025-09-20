@@ -1,11 +1,12 @@
 #include "display.h"
+#include <SDL3_image/SDL_image.h>
 #include <iostream>
 
 #define SDL_MAIN_HANDLED
 
 namespace MS {
 	Display::Display() {
-		mode = 1;
+		mode = 2;
 
 		board.clear(mode);
 
@@ -16,9 +17,17 @@ namespace MS {
 			std::cout << "Window creation failed: " << SDL_GetError() << std::endl;
 		}
 		SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
+
+		for (int i = -1; i <= 12; i++) {
+			auto filename = "C:/Users/yunaf/Documents/projects/minesweeper/sprites/" + std::to_string(i) + ".png";
+			icons[i+1] = IMG_LoadTexture(renderer, filename.c_str());
+		}
 	}
 
 	Display::~Display() {
+		for (auto& v : icons) {
+			SDL_DestroyTexture(v);
+		}
 		SDL_DestroyRenderer(renderer);
 		SDL_DestroyWindow(window);
 		SDL_Quit();
@@ -91,16 +100,15 @@ namespace MS {
 				float x = 250 + col * cell;
 				float y = 100 + row * cell;
 
-				pixel = { x, y, cell, cell };
+				SDL_FRect dst = { x, y, cell, cell };
 
-				int cellContent = board.value(row, col) + 1;
+				int cellValue = board.value(row, col);
+				SDL_Texture* tex = icons[cellValue + 1];
 
-				SDL_SetRenderDrawColor(renderer, r[cellContent], g[cellContent], b[cellContent], 255);
-
-				SDL_RenderFillRect(renderer, &pixel);
+				if (tex) SDL_RenderTexture(renderer, tex, nullptr, &dst);
 
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-				SDL_RenderRect(renderer, &pixel);
+				SDL_RenderRect(renderer, &dst);
 			}
 		}
 	}

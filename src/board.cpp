@@ -2,12 +2,12 @@
 #include <iostream>
 
 namespace MS {
-	Board::Board() : cells(16, std::vector<int>(16, 0)), mode(2), filled(40) {
+	Board::Board() : cells(16, std::vector<int>(16, 0)), mode(2), filled(40), validGame(true), gameStarted(false) {
 		srand(time(nullptr));
 	}
 
 	void Board::clear(int m) {
-		mode = m; gameStarted = false;
+		mode = m; gameStarted = false; validGame = true;
 		filled = mines[m - 1];
 		cells.assign(sizes[mode - 1], std::vector<int>(sizes[mode - 1], 0));
 	}
@@ -42,7 +42,7 @@ namespace MS {
 			if (cells[x][y] == 9) {
 				filled--;
 				if (!filled) {
-					cells[x][y] = 12;
+					cells[x][y] = 12; validGame = false; // Player wins
 					return 2; 
 				}
 				else {
@@ -63,7 +63,14 @@ namespace MS {
 		}
 
 		if (cells[x][y] == 9) {
-			cells[x][y] = 13;
+			for (int i = 0; i < sizes[mode - 1]; i++) {
+				for (int j = 0; j < sizes[mode - 1]; j++) {
+					if (cells[i][j] == 9 || cells[i][j] == 10) {
+						cells[i][j] = 13;
+					}
+				}
+			}
+			validGame = false; // Player fails
 			return 0;
 		}
 
@@ -112,6 +119,9 @@ namespace MS {
 	}
 
 	int Board::update(int mode, float x, float y, bool right) {
+		if (!validGame) {
+			return 0;
+		}
 		std::array<int, 2> pressedCell = positionParser(mode, x, y);
 		if (!gameStarted) {
 			if (!right) {

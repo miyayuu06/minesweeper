@@ -24,9 +24,10 @@ namespace MS {
 	private:
 		int filled;
 		bool gameStarted;
+		bool validGame;
 		int mode;
-		std::array<int, 2> positionParser(int mode, float x, float y);
-
 		std::vector<std::vector<int>> cells;
+
+		std::array<int, 2> positionParser(int mode, float x, float y);
 	};
 }

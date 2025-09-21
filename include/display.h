@@ -27,7 +27,7 @@ namespace MS {
 		SDL_Window* window;
 		SDL_Renderer* renderer;
 		SDL_FRect pixel;
-		SDL_Texture* icons[14];
+		SDL_Texture* icons[15];
 
 		Board board;
 	};

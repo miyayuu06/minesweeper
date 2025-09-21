@@ -18,8 +18,8 @@ namespace MS {
 		}
 		SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
 
-		for (int i = -1; i <= 12; i++) {
-			auto filename = "C:/Users/yunaf/Documents/projects/minesweeper/sprites/" + std::to_string(i) + ".png";
+		for (int i = -1; i <= 13; i++) {
+			auto filename = "sprites/" + std::to_string(i) + ".png";
 			icons[i+1] = IMG_LoadTexture(renderer, filename.c_str());
 		}
 	}

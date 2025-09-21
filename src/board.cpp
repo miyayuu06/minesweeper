@@ -40,10 +40,13 @@ namespace MS {
 
 		if (right) {
 			if (cells[x][y] == 9) {
-				cells[x][y] = 10;
 				filled--;
 				if (!filled) {
+					cells[x][y] = 12;
 					return 2; 
+				}
+				else {
+					cells[x][y] = 10;
 				}
 			}
 			else if (cells[x][y] == 0) {
@@ -60,6 +63,7 @@ namespace MS {
 		}
 
 		if (cells[x][y] == 9) {
+			cells[x][y] = 13;
 			return 0;
 		}
 
@@ -104,7 +108,7 @@ namespace MS {
 		if (x < 0 || y < 0 || x >= sizes[mode - 1] || y >= sizes[mode - 1]) {
 			return 0;
 		}
-		return cells[x][y] == 9;
+		return cells[x][y] == 9 || cells[x][y] == 10;
 	}
 
 	int Board::update(int mode, float x, float y, bool right) {

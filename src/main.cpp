@@ -24,8 +24,6 @@ int main()
                     d.update(x, y, right);
                     clicked = true;
                 }
-                d.print();
-                std::cout << std::endl;
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {

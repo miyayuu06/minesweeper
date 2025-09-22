@@ -1,11 +1,13 @@
 #include "display.h"
 #include <SDL3_image/SDL_image.h>
 #include <iostream>
+#include <cassert>
 
 #define SDL_MAIN_HANDLED
 
 namespace MS {
-	Display::Display() {
+	Display::Display() : pixel({}) {
+		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 		mode = 2;
 
 		board.clear(mode);
@@ -86,7 +88,8 @@ namespace MS {
 			}
 		}
 		else {
-			board.update(mode, x, y, right);
+			int noise = board.update(mode, x, y, right);
+			buzzer.playMP3(sounds[noise]);
 		}
 	}
 

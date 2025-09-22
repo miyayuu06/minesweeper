@@ -3,6 +3,7 @@
 
 #include "SDL3/SDL.h"
 #include "board.h"
+#include "audio.h"
 
 namespace MS {
 	class Display {
@@ -20,6 +21,8 @@ namespace MS {
 		const std::vector<int> r = { 220, 170,  25,  25,  13,   0, 123,  60, 128,  60, 200, 0, 0 };
 		const std::vector<int> g = { 220, 170, 118,  25,  51, 123,  46, 108,   0,  60,   0, 0, 0 };
 		const std::vector<int> b = { 220, 170, 210, 118, 217, 123,  19,  60, 128,  60,   0, 0, 0 };
+		const std::vector<std::string> sounds = {"sfx/lose.mp3", "sfx/click.mp3", "sfx/win.mp3", ""};
+
 		int mode;
 
 		int width;
@@ -28,6 +31,7 @@ namespace MS {
 		SDL_Renderer* renderer;
 		SDL_FRect pixel;
 		SDL_Texture* icons[15];
+		Audio buzzer;
 
 		Board board;
 	};

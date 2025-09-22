@@ -42,6 +42,13 @@ namespace MS {
 			if (cells[x][y] == 9) {
 				filled--;
 				if (!filled) {
+					for (int i = 0; i < sizes[mode - 1]; i++) {
+						for (int j = 0; j < sizes[mode - 1]; j++) {
+							if (cells[i][j] == 10) {
+								cells[i][j] = 12;
+							}
+						}
+					}
 					cells[x][y] = 12; validGame = false; // Player wins
 					return 2; 
 				}
@@ -120,7 +127,7 @@ namespace MS {
 
 	int Board::update(int mode, float x, float y, bool right) {
 		if (!validGame) {
-			return 0;
+			return 3;
 		}
 		std::array<int, 2> pressedCell = positionParser(mode, x, y);
 		if (!gameStarted) {

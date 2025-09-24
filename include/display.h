@@ -2,8 +2,10 @@
 #include <string>
 
 #include "SDL3/SDL.h"
+#include "SDL3/SDL_ttf.h"
 #include "board.h"
 #include "audio.h"
+#include "timer.h"
 
 namespace MS {
 	class Display {
@@ -25,6 +27,7 @@ namespace MS {
 
 		void renderBoard(int mode);
 		void renderButtons(float x, float y);
+		void renderTimer(int time);
 
 		int mode;
 
@@ -34,7 +37,15 @@ namespace MS {
 		SDL_Renderer* renderer;
 		SDL_FRect pixel;
 		SDL_Texture* icons[15];
-		SDL_Texture* buttonTex[3];;
+		SDL_Texture* buttonTex[3];
+
+		SDL_Surface* textSurface;
+		SDL_Texture* textTex;
+		SDL_Color textColor = { 0, 0, 0, 255 };
+		SDL_FRect renderQuad = { 1500.0f, 1000.0f, 0.0f, 0.0f };
+		TTF_Font* font;
+		
+		Timer timer;
 		Audio buzzer;
 
 		Board board;

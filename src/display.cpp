@@ -8,6 +8,7 @@
 namespace MS {
 	Display::Display() : pixel({}) {
 		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+		TTF_Init();
 		mode = 2;
 
 		board.clear(mode);
@@ -28,6 +29,11 @@ namespace MS {
 		for (int i = 0; i < 3; i++) {
 			buttonTex[i] = IMG_LoadTexture(renderer, buttons[i].c_str());
 		}
+
+		font = TTF_OpenFont("C:/Windows/Fonts/Arial.ttf", 96);
+		if (font == NULL) {
+			std::cout << "No font bro";
+		}
 	}
 
 	Display::~Display() {
@@ -36,10 +42,11 @@ namespace MS {
 		}
 		SDL_DestroyRenderer(renderer);
 		SDL_DestroyWindow(window);
-		SDL_Quit();
+		TTF_CloseFont(font);
 	}
 
 	void Display::render(float x, float y) {
+		timer.tick();
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		SDL_RenderClear(renderer);
 
@@ -47,29 +54,39 @@ namespace MS {
 
 		renderButtons(x, y);
 
+		renderTimer(timer.val());
+
 		SDL_RenderPresent(renderer);
 	}
 
 	void Display::update(float x, float y, bool right) {
+		timer.tick();
 		if (x >= 1500 && x <= 1800) {
 			bool changed = false;
-			if (y >= 200 && y <= 300) {
-				mode = 1; changed = true;
-			}
-			if (y >= 500 && y <= 600) {
-				mode = 2; changed = true;
-			}
-			if (y >= 800 && y <= 900) {
-				mode = 3; changed = true;
+			for (int i = 0; i < 3; i++) {
+				if ((y >= (200 + i * 200)) && (y <= (300 + i * 200))) {
+					mode = i+1; changed = true; 
+					break;
+				}
 			}
 			if (changed) {
 				board.clear(mode);
+				timer.reset(); timer.pause();
 			}
 		}
 		else {
 			int noise = board.update(mode, x, y, right);
+			if (noise == 1 || (noise == 3 && timer.isRunning())) {
+				timer.resume();
+			}
+			if (noise == 2 || noise == 0) {
+				timer.pause();
+			}
+
 			buzzer.playMP3(sounds[noise]);
 		}
+
+		std::cout << timer.val() << std::endl;
 	}
 
 	void Display::renderBoard(int mode) {
@@ -97,22 +114,36 @@ namespace MS {
 
 	void Display::renderButtons(float x, float y) {
 		for (int i = 0; i < 3; i++) {
-			int opacity = 1;
+			float opacity = 1.0f;
 
-			float auxY = 200.f + ((float)i * 300.f);
+			float auxY = 200.f + ((float)i * 200.f);
 			pixel = { 1500.f, auxY, 300.f, 100.f};
 
 			if (x >= 1500 && x <= 1800) {
 				if (y >= auxY && y <= (auxY + 100.f)) {
-					opacity = 7;
+					opacity = 0.7f;
 				}
 			}
 
+			SDL_SetTextureAlphaMod(buttonTex[i], static_cast<Uint8>(255 * opacity));
 			SDL_RenderTexture(renderer, buttonTex[i], nullptr, &pixel);
 
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255 / opacity);
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			SDL_RenderRect(renderer, &pixel);
 		}
+	}
+
+	void Display::renderTimer(int time) {
+		std::string timeToPrint = std::to_string(time);
+		while (timeToPrint.length() < 3) {
+			timeToPrint = "0" + timeToPrint;
+		}
+
+		textSurface = TTF_RenderText_Solid(font, timeToPrint.c_str(), 3, textColor);
+		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
+		SDL_DestroySurface(textSurface);
+		SDL_GetTextureSize(textTex, &(renderQuad.w), &(renderQuad.h)); 
+		SDL_RenderTexture(renderer, textTex, NULL, &renderQuad);
 	}
 
 	int Display::print() {

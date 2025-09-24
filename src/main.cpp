@@ -20,7 +20,6 @@ int main()
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
                 if (!clicked) {
                     bool right = SDL_GetMouseState(&x, &y) == SDL_BUTTON_X1;
-                    std::cout << std::endl << SDL_GetMouseState(&x, &y) << std::endl << std::endl;
                     d.update(x, y, right);
                     clicked = true;
                 }

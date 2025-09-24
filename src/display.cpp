@@ -24,6 +24,10 @@ namespace MS {
 			auto filename = "sprites/" + std::to_string(i) + ".png";
 			icons[i+1] = IMG_LoadTexture(renderer, filename.c_str());
 		}
+
+		for (int i = 0; i < 3; i++) {
+			buttonTex[i] = IMG_LoadTexture(renderer, buttons[i].c_str());
+		}
 	}
 
 	Display::~Display() {
@@ -41,32 +45,7 @@ namespace MS {
 
 		renderBoard(mode);
 
-		SDL_SetRenderDrawColor(renderer, 17, 168, 80, 255);
-		if (x >= 1500 && x <= 1800) {
-			if (y >= 200 && y <= 300) {
-				SDL_SetRenderDrawColor(renderer, 7, 158, 70, 255);
-			}
-		}
-		pixel = { (float) 1500, (float) 200, (float) 300, (float) 100};
-		SDL_RenderFillRect(renderer, &pixel);
-
-		SDL_SetRenderDrawColor(renderer, 215, 222, 18, 255);
-		if (x >= 1500 && x <= 1800) {
-			if (y >= 500 && y <= 600) {
-				SDL_SetRenderDrawColor(renderer, 205, 212, 8, 255);
-			}
-		}
-		pixel = { (float) 1500, (float) 500, (float) 300, (float) 100 };
-		SDL_RenderFillRect(renderer, &pixel);
-
-		SDL_SetRenderDrawColor(renderer, 222, 18, 18, 255);
-		if (x >= 1500 && x <= 1800) {
-			if (y >= 800 && y <= 900) {
-				SDL_SetRenderDrawColor(renderer, 202, 8, 8, 255);
-			}
-		}
-		pixel = { (float) 1500, (float) 800, (float) 300, (float) 100 };
-		SDL_RenderFillRect(renderer, &pixel);
+		renderButtons(x, y);
 
 		SDL_RenderPresent(renderer);
 	}
@@ -113,6 +92,26 @@ namespace MS {
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 				SDL_RenderRect(renderer, &dst);
 			}
+		}
+	}
+
+	void Display::renderButtons(float x, float y) {
+		for (int i = 0; i < 3; i++) {
+			int opacity = 1;
+
+			float auxY = 200.f + ((float)i * 300.f);
+			pixel = { 1500.f, auxY, 300.f, 100.f};
+
+			if (x >= 1500 && x <= 1800) {
+				if (y >= auxY && y <= (auxY + 100.f)) {
+					opacity = 7;
+				}
+			}
+
+			SDL_RenderTexture(renderer, buttonTex[i], nullptr, &pixel);
+
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255 / opacity);
+			SDL_RenderRect(renderer, &pixel);
 		}
 	}
 

@@ -130,6 +130,9 @@ namespace MS {
 			return 3;
 		}
 		std::array<int, 2> pressedCell = positionParser(mode, x, y);
+		if (pressedCell[0] == -1 || pressedCell[1] == -1) {
+			return 3;
+		}
 		if (!gameStarted) {
 			if (!right) {
 				introduceBombs(mode, pressedCell[0], pressedCell[1]);

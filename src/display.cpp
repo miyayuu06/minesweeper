@@ -30,7 +30,8 @@ namespace MS {
 			buttonTex[i] = IMG_LoadTexture(renderer, buttons[i].c_str());
 		}
 
-		font = TTF_OpenFont("C:/Windows/Fonts/Arial.ttf", 96);
+		font = TTF_OpenFont("C:/Windows/Fonts/Stencil.ttf", 170);
+		smallFont = TTF_OpenFont("C:/Windows/Fonts/Stencil.ttf", 60);
 		if (font == NULL) {
 			std::cout << "No font bro";
 		}
@@ -55,6 +56,8 @@ namespace MS {
 		renderButtons(x, y);
 
 		renderTimer(timer.val());
+
+		renderBestScore(mode);
 
 		SDL_RenderPresent(renderer);
 	}
@@ -81,12 +84,13 @@ namespace MS {
 			}
 			if (noise == 2 || noise == 0) {
 				timer.pause();
+				if (noise == 2 && timer.val() < best[mode - 1]) {
+					best[mode - 1] = timer.val();
+				}
 			}
 
 			buzzer.playMP3(sounds[noise]);
 		}
-
-		std::cout << timer.val() << std::endl;
 	}
 
 	void Display::renderBoard(int mode) {
@@ -142,7 +146,24 @@ namespace MS {
 		textSurface = TTF_RenderText_Solid(font, timeToPrint.c_str(), 3, textColor);
 		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
 		SDL_DestroySurface(textSurface);
+		renderQuad.x = 1500.0f; renderQuad.y = 750.0f;
 		SDL_GetTextureSize(textTex, &(renderQuad.w), &(renderQuad.h)); 
+		SDL_RenderTexture(renderer, textTex, NULL, &renderQuad);
+	}
+
+	void Display::renderBestScore(int mode) {
+		std::string bestToPrint = "Best: ";
+		if (best[mode - 1] != 999) {
+			bestToPrint += std::to_string(best[mode - 1]);
+			while (bestToPrint.length() < 9) {
+				bestToPrint = bestToPrint.insert(6, "0");
+			}
+		}
+		textSurface = TTF_RenderText_Solid(smallFont, bestToPrint.c_str(), bestToPrint.size(), textColor);
+		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
+		SDL_DestroySurface(textSurface);
+		SDL_GetTextureSize(textTex, &(renderQuad.w), &(renderQuad.h));
+		renderQuad.x = 1500.0f; renderQuad.y = 950.0f;
 		SDL_RenderTexture(renderer, textTex, NULL, &renderQuad);
 	}
 

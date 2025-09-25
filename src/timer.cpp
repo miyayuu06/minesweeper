@@ -14,7 +14,7 @@ namespace MS {
 	void Timer::tick() {
 		if (running) {
 			time_t now = time(nullptr);
-			if (now - start > 1) {
+			if (now > start) {
 				value++;
 				start = now;
 			}

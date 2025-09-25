@@ -25,9 +25,12 @@ namespace MS {
 		const std::vector<std::string> sounds = {"sfx/lose.mp3", "sfx/click.mp3", "sfx/win.mp3", ""};
 		const std::vector<std::string> buttons = { "sprites/easy.png", "sprites/medium.png", "sprites/hard.png"};
 
+		std::vector<int> best = { 999, 999, 999 };
+
 		void renderBoard(int mode);
 		void renderButtons(float x, float y);
 		void renderTimer(int time);
+		void renderBestScore(int mode);
 
 		int mode;
 
@@ -42,8 +45,9 @@ namespace MS {
 		SDL_Surface* textSurface;
 		SDL_Texture* textTex;
 		SDL_Color textColor = { 0, 0, 0, 255 };
-		SDL_FRect renderQuad = { 1500.0f, 1000.0f, 0.0f, 0.0f };
+		SDL_FRect renderQuad = { 1500.0f, 800.0f, 0.0f, 0.0f };
 		TTF_Font* font;
+		TTF_Font* smallFont;
 		
 		Timer timer;
 		Audio buzzer;

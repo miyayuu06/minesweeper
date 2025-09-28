@@ -31,8 +31,13 @@ namespace MS {
 		void renderButtons(float x, float y);
 		void renderTimer(int time);
 		void renderBestScore(int mode);
+		void renderMenuButton();
 
 		int mode;
+		bool menu;
+
+		Uint32 gameStartTime = 0;
+		void toggleToMenu();
 
 		int width;
 		int height;
@@ -41,6 +46,7 @@ namespace MS {
 		SDL_FRect pixel;
 		SDL_Texture* icons[15];
 		SDL_Texture* buttonTex[3];
+		SDL_Texture* menuIcon;
 
 		SDL_Surface* textSurface;
 		SDL_Texture* textTex;

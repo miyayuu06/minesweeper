@@ -145,13 +145,13 @@ namespace MS {
 	std::array<int, 2> Board::positionParser(int mode, float x, float y) {
 		int size = sizes[mode - 1];
 
-		if (x < 250 || x > 1250 || y < 100 || y > 1100) {
+		if (x < 460 || x > 1460 || y < 100 || y > 1100) {
 			return { -1, -1 };
 		}
 
 		float cell = 1000.0f / size;
 
-		int col = (x - 250) / cell;
+		int col = (x - 460) / cell;
 		int row = (y - 100) / cell;
 
 		return { row, col };

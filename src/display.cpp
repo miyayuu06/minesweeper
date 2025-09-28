@@ -3,10 +3,12 @@
 #include <iostream>
 #include <cassert>
 
+#include "Windows.h"
+
 #define SDL_MAIN_HANDLED
 
 namespace MS {
-	Display::Display() : pixel({}) {
+	Display::Display() : pixel({}), menu(false) {
 		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 		TTF_Init();
 		mode = 2;
@@ -35,6 +37,8 @@ namespace MS {
 		if (font == NULL) {
 			std::cout << "No font bro";
 		}
+
+		menuIcon = IMG_LoadTexture(renderer, "sprites/menu.png");
 	}
 
 	Display::~Display() {
@@ -46,39 +50,63 @@ namespace MS {
 		TTF_CloseFont(font);
 	}
 
+	void Display::renderMenuButton() {
+		SDL_FRect dst = { 20.f, 20.f, 50.f, 50.f };
+
+		SDL_RenderTexture(renderer, menuIcon, nullptr, &dst);
+
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_RenderRect(renderer, &dst);
+	}
+
 	void Display::render(float x, float y) {
+		if (gameStartTime!= 0 && SDL_GetTicks() - gameStartTime > 3000) {
+			toggleToMenu();
+		}
 		timer.tick();
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		SDL_RenderClear(renderer);
 
-		renderBoard(mode);
+		renderMenuButton();
+		if (!menu) {
+			renderBoard(mode);
 
-		renderButtons(x, y);
+			renderTimer(timer.val());
 
-		renderTimer(timer.val());
-
-		renderBestScore(mode);
+			renderBestScore(mode);
+		}
+		else {
+			renderButtons(x, y);
+		}
 
 		SDL_RenderPresent(renderer);
 	}
 
 	void Display::update(float x, float y, bool right) {
 		timer.tick();
-		if (x >= 1500 && x <= 1800) {
-			bool changed = false;
-			for (int i = 0; i < 3; i++) {
-				if ((y >= (200 + i * 200)) && (y <= (300 + i * 200))) {
-					mode = i+1; changed = true; 
-					break;
+		if (x >= 20 && x <= 70 && y >= 20 && y <= 70) {
+			menu = !menu;
+			return;
+		}
+		if (menu) {
+			if (x >= 810 && x <= 1110) {
+				bool changed = false;
+				for (int i = 0; i < 3; i++) {
+					if ((y >= (200 + i * 200)) && (y <= (200 + i * 200))) {
+						mode = i + 1; changed = true;
+						break;
+					}
 				}
-			}
-			if (changed) {
-				board.clear(mode);
-				timer.reset(); timer.pause();
+				if (changed) {
+					board.clear(mode);
+					gameStartTime = 0;
+					timer.reset(); timer.pause(); menu = false;
+				}
 			}
 		}
 		else {
 			int noise = board.update(mode, x, y, right);
+			buzzer.playMP3(sounds[noise]);
 			if (noise == 1 || (noise == 3 && timer.isRunning())) {
 				timer.resume();
 			}
@@ -87,10 +115,14 @@ namespace MS {
 				if (noise == 2 && timer.val() < best[mode - 1]) {
 					best[mode - 1] = timer.val();
 				}
+				
+				gameStartTime = SDL_GetTicks();
 			}
-
-			buzzer.playMP3(sounds[noise]);
 		}
+	}
+
+	void Display::toggleToMenu() {
+		menu = true;
 	}
 
 	void Display::renderBoard(int mode) {
@@ -100,7 +132,7 @@ namespace MS {
 
 		for (int row = 0; row < size; row++) {
 			for (int col = 0; col < size; col++) {
-				float x = 250 + col * cell;
+				float x = 460 + col * cell;
 				float y = 100 + row * cell;
 
 				SDL_FRect dst = { x, y, cell, cell };
@@ -121,10 +153,10 @@ namespace MS {
 			float opacity = 1.0f;
 
 			float auxY = 200.f + ((float)i * 200.f);
-			pixel = { 1500.f, auxY, 300.f, 100.f};
+			pixel = { 810.f, auxY, 300.f, 200.f};
 
-			if (x >= 1500 && x <= 1800) {
-				if (y >= auxY && y <= (auxY + 100.f)) {
+			if (x >= 810 && x <= 1110) {
+				if (y >= auxY && y <= (auxY + 200.f)) {
 					opacity = 0.7f;
 				}
 			}

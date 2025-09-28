@@ -13,12 +13,9 @@ namespace MS {
 		void introduceBombs(int mode, int x, int y);
 		int selectedCell(int mode, int x, int y, bool right);
 		void BFS(int mode, int x, int y);
-
 		int count(int mode, int x, int y);
-
 		int update(int mode, float x, float y, bool right);
 
-		void print();
 		int value(int x, int y);
 
 	private:

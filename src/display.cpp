@@ -89,10 +89,10 @@ namespace MS {
 			return;
 		}
 		if (menu) {
-			if (x >= 810 && x <= 1110) {
+			if (x >= 710 && x <= 1210) {
 				bool changed = false;
 				for (int i = 0; i < 3; i++) {
-					if ((y >= (200 + i * 200)) && (y <= (200 + i * 200))) {
+					if ((y >= (200 + i * 300)) && (y <= (400 + i * 300))) {
 						mode = i + 1; changed = true;
 						break;
 					}
@@ -152,10 +152,10 @@ namespace MS {
 		for (int i = 0; i < 3; i++) {
 			float opacity = 1.0f;
 
-			float auxY = 200.f + ((float)i * 200.f);
-			pixel = { 810.f, auxY, 300.f, 200.f};
+			float auxY = 200.f + ((float)i * 300.f);
+			pixel = { 710.f, auxY, 500.f, 200.f};
 
-			if (x >= 810 && x <= 1110) {
+			if (x >= 810 && x <= 1210) {
 				if (y >= auxY && y <= (auxY + 200.f)) {
 					opacity = 0.7f;
 				}
@@ -178,7 +178,7 @@ namespace MS {
 		textSurface = TTF_RenderText_Solid(font, timeToPrint.c_str(), 3, textColor);
 		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
 		SDL_DestroySurface(textSurface);
-		renderQuad.x = 1500.0f; renderQuad.y = 750.0f;
+		renderQuad.x = 1500.0f; renderQuad.y = 200.0f;
 		SDL_GetTextureSize(textTex, &(renderQuad.w), &(renderQuad.h)); 
 		SDL_RenderTexture(renderer, textTex, NULL, &renderQuad);
 	}
@@ -195,12 +195,7 @@ namespace MS {
 		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
 		SDL_DestroySurface(textSurface);
 		SDL_GetTextureSize(textTex, &(renderQuad.w), &(renderQuad.h));
-		renderQuad.x = 1500.0f; renderQuad.y = 950.0f;
+		renderQuad.x = 100.0f; renderQuad.y = 200.0f;
 		SDL_RenderTexture(renderer, textTex, NULL, &renderQuad);
-	}
-
-	int Display::print() {
-		board.print();
-		return mode;
 	}
 }

@@ -16,8 +16,6 @@ namespace MS {
 		void render(float x, float y);
 		void update(float x, float y, bool right);
 
-		int print();
-
 	private:
 		const std::vector<int> r = { 220, 170,  25,  25,  13,   0, 123,  60, 128,  60, 200, 0, 0 };
 		const std::vector<int> g = { 220, 170, 118,  25,  51, 123,  46, 108,   0,  60,   0, 0, 0 };
@@ -51,7 +49,7 @@ namespace MS {
 		SDL_Surface* textSurface;
 		SDL_Texture* textTex;
 		SDL_Color textColor = { 0, 0, 0, 255 };
-		SDL_FRect renderQuad = { 1500.0f, 800.0f, 0.0f, 0.0f };
+		SDL_FRect renderQuad = { 1500.0f, 100.0f, 0.0f, 0.0f };
 		TTF_Font* font;
 		TTF_Font* smallFont;
 		

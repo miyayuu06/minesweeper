@@ -156,13 +156,4 @@ namespace MS {
 
 		return { row, col };
 	}
-
-	void Board::print() {
-		for (int i = 0; i < cells.size(); i++) {
-			for (int j = 0; j < cells.size(); j++) {
-				std::cout << cells[i][j] << " ";
-			}
-			std::cout << std::endl;
-		}
-	}
 }

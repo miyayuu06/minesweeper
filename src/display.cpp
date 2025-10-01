@@ -50,49 +50,18 @@ namespace MS {
 		TTF_CloseFont(font);
 	}
 
-	void Display::renderMenuButton() {
-		SDL_FRect dst = { 20.f, 20.f, 50.f, 50.f };
-
-		SDL_RenderTexture(renderer, menuIcon, nullptr, &dst);
-
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		SDL_RenderRect(renderer, &dst);
-	}
-
-	void Display::render(float x, float y) {
-		if (gameStartTime!= 0 && SDL_GetTicks() - gameStartTime > 3000) {
-			toggleToMenu();
-		}
-		timer.tick();
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		SDL_RenderClear(renderer);
-
-		renderMenuButton();
-		if (!menu) {
-			renderBoard(mode);
-
-			renderTimer(timer.val());
-
-			renderBestScore(mode);
-		}
-		else {
-			renderButtons(x, y);
-		}
-
-		SDL_RenderPresent(renderer);
-	}
-
 	void Display::update(float x, float y, bool right) {
 		timer.tick();
-		if (x >= 20 && x <= 70 && y >= 20 && y <= 70) {
+		if (x >= menuPos.x && x <= menuPos.y && y >= menuPos.x && y <= menuPos.y) {
 			menu = !menu;
 			return;
 		}
 		if (menu) {
-			if (x >= buttonTopLeft.x && x <= buttonBottomRight.x) {
+			if (x >= buttonTopLeft.x && x <= (buttonTopLeft.x + buttonSize.x)) {
 				bool changed = false;
 				for (int i = 0; i < 3; i++) {
-					if ((y >= (200 + i * 300)) && (y <= (400 + i * 300))) {
+					float btnY = buttonTopLeft.y + i * (buttonSize.y + 100);
+					if (y >= btnY && y <= (btnY + buttonSize.y)) {
 						mode = i + 1; changed = true;
 						break;
 					}
@@ -115,7 +84,6 @@ namespace MS {
 				if (noise == 2 && timer.val() < best[mode - 1]) {
 					best[mode - 1] = timer.val();
 				}
-				
 				gameStartTime = SDL_GetTicks();
 			}
 		}
@@ -123,6 +91,36 @@ namespace MS {
 
 	void Display::toggleToMenu() {
 		menu = true;
+	}
+
+	void Display::render(float x, float y) {
+		if (gameStartTime != 0 && SDL_GetTicks() - gameStartTime > 3000) {
+			toggleToMenu();
+		}
+		timer.tick();
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_RenderClear(renderer);
+
+		renderMenuButton();
+		if (!menu) {
+			renderBoard(mode);
+			renderTimer(timer.val());
+			renderBestScore(mode);
+		}
+		else {
+			renderButtons(x, y);
+		}
+
+		SDL_RenderPresent(renderer);
+	}
+
+	void Display::renderMenuButton() {
+		SDL_FRect dst = { (float) menuPos.x, (float)menuPos.x, (float)menuPos.y - menuPos.x, (float)menuPos.y - menuPos.x };
+
+		SDL_RenderTexture(renderer, menuIcon, nullptr, &dst);
+
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_RenderRect(renderer, &dst);
 	}
 
 	void Display::renderBoard(int mode) {
@@ -140,7 +138,9 @@ namespace MS {
 				int cellValue = board.value(row, col);
 				SDL_Texture* tex = icons[cellValue + 1];
 
-				if (tex) SDL_RenderTexture(renderer, tex, nullptr, &dst);
+				if (tex) {
+					SDL_RenderTexture(renderer, tex, nullptr, &dst);
+				}
 
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 				SDL_RenderRect(renderer, &dst);
@@ -153,11 +153,10 @@ namespace MS {
 			float opacity = 1.0f;
 
 			float btnX = static_cast<float>(buttonTopLeft.x);
-			float btnY = static_cast<float>(buttonTopLeft.y + i * (buttonSize.y + 100)); // 100px vertical gap
+			float btnY = static_cast<float>(buttonTopLeft.y + i * (buttonSize.y + 100));
 
 			SDL_FRect btnRect = { btnX, btnY, static_cast<float>(buttonSize.x), static_cast<float>(buttonSize.y) };
 
-			// Hover effect
 			if (x >= btnX && x <= (btnX + buttonSize.x) &&
 				y >= btnY && y <= (btnY + buttonSize.y)) {
 				opacity = 0.7f;
@@ -180,7 +179,7 @@ namespace MS {
 		textSurface = TTF_RenderText_Solid(font, timeToPrint.c_str(), 3, textColor);
 		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
 		SDL_DestroySurface(textSurface);
-		renderQuad.x = 1500.0f; renderQuad.y = 200.0f;
+		renderQuad.x = (float)timerPos.x; renderQuad.y = (float)timerPos.y;
 		SDL_GetTextureSize(textTex, &(renderQuad.w), &(renderQuad.h)); 
 		SDL_RenderTexture(renderer, textTex, NULL, &renderQuad);
 	}
@@ -197,7 +196,7 @@ namespace MS {
 		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);
 		SDL_DestroySurface(textSurface);
 		SDL_GetTextureSize(textTex, &(renderQuad.w), &(renderQuad.h));
-		renderQuad.x = 100.0f; renderQuad.y = 200.0f;
+		renderQuad.x = (float) bestScorePos.x; renderQuad.y = (float)bestScorePos.y;
 		SDL_RenderTexture(renderer, textTex, NULL, &renderQuad);
 	}
 }

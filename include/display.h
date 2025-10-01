@@ -22,6 +22,9 @@ namespace MS {
 		const Coordinates buttonTopLeft = { 710, 200 };
 		const Coordinates buttonBottomRight = { 1210, 1100 };
 		const Coordinates buttonSize = { 500, 200 };
+		const Coordinates menuPos = { 20, 70 };
+		const Coordinates bestScorePos = { 100, 400 };
+		const Coordinates timerPos = { 1500, 200 };
 
 		const std::vector<int> r = { 220, 170,  25,  25,  13,   0, 123,  60, 128,  60, 200, 0, 0 };
 		const std::vector<int> g = { 220, 170, 118,  25,  51, 123,  46, 108,   0,  60,   0, 0, 0 };

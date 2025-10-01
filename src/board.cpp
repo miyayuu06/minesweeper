@@ -16,7 +16,7 @@ namespace MS {
 		return cells[x][y];
 	}
 
-	void Board::introduceBombs(int mode, int x, int y) {
+	void Board::introduceBombs(int x, int y) {
 		if (x != -1) {
 			int n = mines[mode - 1];
 			int s = sizes[mode - 1];
@@ -29,11 +29,11 @@ namespace MS {
 				}
 			}
 			gameStarted = true;
-			BFS(mode, x, y);
+			BFS(x, y);
 		}
 	}
 
-	int Board::selectedCell(int mode, int x, int y, bool right) {
+	int Board::selectedCell(int x, int y, bool right) {
 		if (x < -1) {
 			return 1;
 		}
@@ -81,11 +81,11 @@ namespace MS {
 			return 0;
 		}
 
-		BFS(mode, x, y);
+		BFS(x, y);
 		return 1;
 	}
 
-	void Board::BFS(int mode, int x, int y) {
+	void Board::BFS(int x, int y) {
 		int size = sizes[mode - 1];
 		if (x < size && x >= 0 && y < size && y >= 0) {
 
@@ -99,7 +99,7 @@ namespace MS {
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
 					if (!(i == 0 && j == 0)) {
-						c += count(mode, x + i, y + j);
+						c += count(x + i, y + j);
 					}
 				}
 			}
@@ -111,41 +111,41 @@ namespace MS {
 				cells[x][y] = -1;
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
-						BFS(mode, x + i, y + j);
+						BFS(x + i, y + j);
 					}
 				}
 			}
 		}
 	}
 
-	int Board::count(int mode, int x, int y) {
+	int Board::count(int x, int y) {
 		if (x < 0 || y < 0 || x >= sizes[mode - 1] || y >= sizes[mode - 1]) {
 			return 0;
 		}
 		return cells[x][y] == 9 || cells[x][y] == 10;
 	}
 
-	int Board::update(int mode, float x, float y, bool right) {
+	int Board::update(float x, float y, bool right) {
 		if (!validGame) {
 			return 3;
 		}
-		std::array<int, 2> pressedCell = positionParser(mode, x, y);
+		std::array<int, 2> pressedCell = positionParser(x, y);
 		if (pressedCell[0] == -1 || pressedCell[1] == -1) {
 			return 3;
 		}
 		if (!gameStarted) {
 			if (!right) {
-				introduceBombs(mode, pressedCell[0], pressedCell[1]);
+				introduceBombs(pressedCell[0], pressedCell[1]);
 			}
 			return 1;
 		}
-		return selectedCell(mode, pressedCell[0], pressedCell[1], right);
+		return selectedCell(pressedCell[0], pressedCell[1], right);
 	}
 
-	std::array<int, 2> Board::positionParser(int mode, float x, float y) {
+	std::array<int, 2> Board::positionParser(float x, float y) {
 		int size = sizes[mode - 1];
 
-		if (x < 460 || x > 1460 || y < 100 || y > 1100) {
+		if (x < topLeft.x || x > bottomRight.x || y < topLeft.y || y > bottomRight.y) {
 			return { -1, -1 };
 		}
 

@@ -17,6 +17,12 @@ namespace MS {
 		void update(float x, float y, bool right);
 
 	private:
+		const Coordinates topLeft = { 460, 100 };
+		const Coordinates bottomRight = { 1460, 1100 };
+		const Coordinates buttonTopLeft = { 710, 200 };
+		const Coordinates buttonBottomRight = { 1210, 1100 };
+		const Coordinates buttonSize = { 500, 200 };
+
 		const std::vector<int> r = { 220, 170,  25,  25,  13,   0, 123,  60, 128,  60, 200, 0, 0 };
 		const std::vector<int> g = { 220, 170, 118,  25,  51, 123,  46, 108,   0,  60,   0, 0, 0 };
 		const std::vector<int> b = { 220, 170, 210, 118, 217, 123,  19,  60, 128,  60,   0, 0, 0 };
@@ -34,7 +40,7 @@ namespace MS {
 		int mode;
 		bool menu;
 
-		Uint32 gameStartTime = 0;
+		Uint64 gameStartTime = 0;
 		void toggleToMenu();
 
 		int width;
@@ -46,12 +52,12 @@ namespace MS {
 		SDL_Texture* buttonTex[3];
 		SDL_Texture* menuIcon;
 
-		SDL_Surface* textSurface;
-		SDL_Texture* textTex;
+		SDL_Surface* textSurface = nullptr;
+		SDL_Texture* textTex = nullptr;
 		SDL_Color textColor = { 0, 0, 0, 255 };
 		SDL_FRect renderQuad = { 1500.0f, 100.0f, 0.0f, 0.0f };
-		TTF_Font* font;
-		TTF_Font* smallFont;
+		TTF_Font* font = nullptr;
+		TTF_Font* smallFont = nullptr;
 		
 		Timer timer;
 		Audio buzzer;

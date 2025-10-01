@@ -89,7 +89,7 @@ namespace MS {
 			return;
 		}
 		if (menu) {
-			if (x >= 710 && x <= 1210) {
+			if (x >= buttonTopLeft.x && x <= buttonBottomRight.x) {
 				bool changed = false;
 				for (int i = 0; i < 3; i++) {
 					if ((y >= (200 + i * 300)) && (y <= (400 + i * 300))) {
@@ -105,7 +105,7 @@ namespace MS {
 			}
 		}
 		else {
-			int noise = board.update(mode, x, y, right);
+			int noise = board.update(x, y, right);
 			buzzer.playMP3(sounds[noise]);
 			if (noise == 1 || (noise == 3 && timer.isRunning())) {
 				timer.resume();
@@ -132,8 +132,8 @@ namespace MS {
 
 		for (int row = 0; row < size; row++) {
 			for (int col = 0; col < size; col++) {
-				float x = 460 + col * cell;
-				float y = 100 + row * cell;
+				float x = topLeft.x + col * cell;
+				float y = topLeft.y + row * cell;
 
 				SDL_FRect dst = { x, y, cell, cell };
 
@@ -152,20 +152,22 @@ namespace MS {
 		for (int i = 0; i < 3; i++) {
 			float opacity = 1.0f;
 
-			float auxY = 200.f + ((float)i * 300.f);
-			pixel = { 710.f, auxY, 500.f, 200.f};
+			float btnX = static_cast<float>(buttonTopLeft.x);
+			float btnY = static_cast<float>(buttonTopLeft.y + i * (buttonSize.y + 100)); // 100px vertical gap
 
-			if (x >= 810 && x <= 1210) {
-				if (y >= auxY && y <= (auxY + 200.f)) {
-					opacity = 0.7f;
-				}
+			SDL_FRect btnRect = { btnX, btnY, static_cast<float>(buttonSize.x), static_cast<float>(buttonSize.y) };
+
+			// Hover effect
+			if (x >= btnX && x <= (btnX + buttonSize.x) &&
+				y >= btnY && y <= (btnY + buttonSize.y)) {
+				opacity = 0.7f;
 			}
 
 			SDL_SetTextureAlphaMod(buttonTex[i], static_cast<Uint8>(255 * opacity));
-			SDL_RenderTexture(renderer, buttonTex[i], nullptr, &pixel);
+			SDL_RenderTexture(renderer, buttonTex[i], nullptr, &btnRect);
 
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-			SDL_RenderRect(renderer, &pixel);
+			SDL_RenderRect(renderer, &btnRect);
 		}
 	}
 

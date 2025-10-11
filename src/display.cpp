@@ -28,14 +28,13 @@ namespace MS {
 			icons[i+1] = IMG_LoadTexture(renderer, filename.c_str());
 		}
 
-		for (int i = 0; i < 3; i++) {
-			buttonTex[i] = IMG_LoadTexture(renderer, buttons[i].c_str());
-		}
+		font = TTF_OpenFont("./fonts/Minecraft.ttf", 170);
+		smallFont = TTF_OpenFont("./fonts/Minecraft.ttf", 60);
+		buttonFont = TTF_OpenFont("./fonts/Minecraft.ttf", 60);
 
-		font = TTF_OpenFont("C:/Windows/Fonts/Stencil.ttf", 170);
-		smallFont = TTF_OpenFont("C:/Windows/Fonts/Stencil.ttf", 60);
-		if (font == NULL) {
-			std::cout << "No font bro";
+		for (int i = 0; i < 3; i++) {
+			buttonTex[i] = SDL_CreateTextureFromSurface(renderer,
+				TTF_RenderText_Solid(buttonFont, buttonText[i].c_str(), buttonText[i].size(), buttonTextColor));
 		}
 
 		menuIcon = IMG_LoadTexture(renderer, "sprites/menu.png");
@@ -98,7 +97,7 @@ namespace MS {
 			toggleToMenu();
 		}
 		timer.tick();
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_SetRenderDrawColor(renderer, 190, 190, 190, 255);
 		SDL_RenderClear(renderer);
 
 		renderMenuButton();
@@ -119,7 +118,7 @@ namespace MS {
 
 		SDL_RenderTexture(renderer, menuIcon, nullptr, &dst);
 
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_SetRenderDrawColor(renderer, 190, 190, 190, 255);
 		SDL_RenderRect(renderer, &dst);
 	}
 
@@ -162,11 +161,12 @@ namespace MS {
 				opacity = 0.7f;
 			}
 
-			SDL_SetTextureAlphaMod(buttonTex[i], static_cast<Uint8>(255 * opacity));
-			SDL_RenderTexture(renderer, buttonTex[i], nullptr, &btnRect);
+			//SDL_SetTextureAlphaMod(buttonTex[i], static_cast<Uint8>(255 * opacity));
+			//SDL_RenderTexture(renderer, buttonTex[i], nullptr, &btnRect);
 
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-			SDL_RenderRect(renderer, &btnRect);
+			SDL_SetRenderDrawColor(renderer, buttonr[i], buttong[i], buttonb[i], 255);
+			SDL_RenderFillRect(renderer, &btnRect);
+			SDL_RenderTexture(renderer, buttonTex[i], NULL, &btnRect);
 		}
 	}
 
@@ -186,11 +186,9 @@ namespace MS {
 
 	void Display::renderBestScore(int mode) {
 		std::string bestToPrint = "Best: ";
-		if (best[mode - 1] != 999) {
-			bestToPrint += std::to_string(best[mode - 1]);
-			while (bestToPrint.length() < 9) {
-				bestToPrint = bestToPrint.insert(6, "0");
-			}
+		bestToPrint += std::to_string(best[mode - 1]);
+		while (bestToPrint.length() < 9) {
+			bestToPrint = bestToPrint.insert(6, "0");
 		}
 		textSurface = TTF_RenderText_Solid(smallFont, bestToPrint.c_str(), bestToPrint.size(), textColor);
 		textTex = SDL_CreateTextureFromSurface(renderer, textSurface);

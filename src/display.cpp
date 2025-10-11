@@ -161,12 +161,19 @@ namespace MS {
 				opacity = 0.7f;
 			}
 
-			//SDL_SetTextureAlphaMod(buttonTex[i], static_cast<Uint8>(255 * opacity));
-			//SDL_RenderTexture(renderer, buttonTex[i], nullptr, &btnRect);
-
 			SDL_SetRenderDrawColor(renderer, buttonr[i], buttong[i], buttonb[i], 255);
 			SDL_RenderFillRect(renderer, &btnRect);
+
+			btnRect.x += 50;
+			btnRect.y += 60;
+			btnRect.w -= 100;
+			btnRect.h -= 100;
+			
+			SDL_SetTextureAlphaMod(buttonTex[i], static_cast<Uint8>(255 * opacity));
+
 			SDL_RenderTexture(renderer, buttonTex[i], NULL, &btnRect);
+
+			SDL_SetTextureAlphaMod(buttonTex[i], 255);
 		}
 	}
 

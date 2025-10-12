@@ -30,6 +30,9 @@ namespace MS {
 		const std::vector<int> g = { 220, 170, 118,  25,  51, 123,  46, 108,   0,  60,   0, 0, 0 };
 		const std::vector<int> b = { 220, 170, 210, 118, 217, 123,  19,  60, 128,  60,   0, 0, 0 };
 		const std::vector<std::string> sounds = {"sfx/lose.mp3", "sfx/click.mp3", "sfx/win.mp3", ""};
+		
+		//const std::vector<std::string> buttons = { "easy.png", "normal.png", "hard.png" };
+		
 		std::vector<int> buttonr = { 80, 200, 180 };
 		std::vector<int> buttong = { 160, 180, 50 };
 		std::vector<int> buttonb = { 80, 80, 50 };

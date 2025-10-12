@@ -32,6 +32,10 @@ namespace MS {
 		smallFont = TTF_OpenFont("./fonts/Minecraft.ttf", 60);
 		buttonFont = TTF_OpenFont("./fonts/Minecraft.ttf", 60);
 
+		/*for (int i = 0; i < 3; i++) {
+			buttonTex[i] = IMG_LoadTexture(renderer, ("sprites/thaysa/" + buttons[i]).c_str());
+		}*/
+
 		for (int i = 0; i < 3; i++) {
 			buttonTex[i] = SDL_CreateTextureFromSurface(renderer,
 				TTF_RenderText_Solid(buttonFont, buttonText[i].c_str(), buttonText[i].size(), buttonTextColor));
@@ -160,6 +164,11 @@ namespace MS {
 				y >= btnY && y <= (btnY + buttonSize.y)) {
 				opacity = 0.7f;
 			}
+
+			/*SDL_RenderTexture(renderer, buttonTex[i], NULL, &btnRect);
+			SDL_SetTextureAlphaMod(buttonTex[i], static_cast<Uint8>(255 * opacity));
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+			SDL_RenderRect(renderer, &btnRect);*/
 
 			SDL_SetRenderDrawColor(renderer, buttonr[i], buttong[i], buttonb[i], 255);
 			SDL_RenderFillRect(renderer, &btnRect);

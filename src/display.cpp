@@ -24,7 +24,7 @@ namespace MS {
 		SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
 
 		for (int i = -1; i <= 13; i++) {
-			auto filename = "sprites/" + std::to_string(i) + ".png";
+			auto filename = "sprites/thaysa/" + std::to_string(i) + ".png";
 			icons[i+1] = IMG_LoadTexture(renderer, filename.c_str());
 		}
 

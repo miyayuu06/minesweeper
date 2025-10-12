@@ -33,7 +33,7 @@ namespace MS {
 		std::vector<int> buttonr = { 80, 200, 180 };
 		std::vector<int> buttong = { 160, 180, 50 };
 		std::vector<int> buttonb = { 80, 80, 50 };
-		std::vector<std::string> buttonText = { "EASY", "MEDIUM", "HARD" };
+		std::vector<std::string> buttonText = { " EASY ", "MEDIUM", " HARD " };
 
 		std::vector<int> best = { 999, 999, 999 };
 
